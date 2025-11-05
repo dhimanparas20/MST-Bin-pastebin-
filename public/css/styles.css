@@ -1,68 +1,78 @@
 body {
-    font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
 }
 
 .glassmorphism {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.font-mono {
+  font-family: "Courier New", monospace;
 }
 
 #pasteArea {
-    font-family: 'Courier New', monospace;
-    line-height: 1.5;
+  font-family: "Courier New", monospace;
+  line-height: 1.5;
+  padding: 8px;
 }
 
 #lineNumbers {
-    font-family: 'Courier New', monospace;
-    line-height: 1.5;
-    text-align: right;
-    padding-right: 10px;
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: "Courier New", monospace;
+  line-height: 1.5;
+  text-align: right;
+  padding-right: 10px;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  overflow-y: hidden;
 }
 
 footer {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 #pasteContent {
-    font-family: 'Courier New', monospace;
-    line-height: 1.5;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    padding-left: 10px;
+  font-family: "Courier New", monospace;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  padding: 8px;
+  overflow-x: auto;
 }
 
-/* Responsive tweaks */
+/* Smooth scrolling and better defaults */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Better responsive typography and spacing */
 @media (max-width: 640px) {
-    #lineNumbers {
-        font-size: 0.75rem;
-        padding-right: 4px;
-    }
-    #pasteArea, #pasteContent {
-        font-size: 0.75rem;
-        padding-left: 4px;
-    }
-    nav .container {
-        flex-direction: column !important;
-        align-items: stretch !important;
-    }
-    nav h6 {
-        text-align: center !important;
-        margin-top: 0.5rem;
-        margin-bottom: 0.5rem;
-    }
-    nav .flex {
-        flex-direction: column !important;
-        gap: 0.5rem;
-    }
-    footer {
-        font-size: 0.85rem;
-        padding-left: 0.5rem;
-        padding-right: 0.5rem;
-    }
+  #pasteArea,
+  #pasteContent {
+    padding: 6px !important;
+  }
+
+  #lineNumbers {
+    padding-right: 6px;
+  }
+
+  body {
+    font-size: 12px;
+  }
+}
+
+/* Ensure no overflow issues */
+main {
+  display: flex;
+  flex-direction: column;
+}
+
+main > div {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
 }

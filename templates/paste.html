@@ -9,36 +9,45 @@
     <link rel="icon" type="image/png" href="{{ static_base_url }}/img/favicon.ico">
 </head>
 <body class="bg-black text-white flex flex-col min-h-screen">
-    <nav class="glassmorphism fixed top-0 left-0 right-0 z-50">
-        <div class="container mx-auto px-4 sm:px-6 py-3 flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
-            <a href="/" class="text-2xl font-bold flex items-center w-full sm:w-auto justify-center sm:justify-start">
-                <img src="{{ static_base_url }}/img/logo.jpeg" alt="MST Bin Logo" class="h-8 mr-2">
-                MST Bin
-                <span class="ml-4 text-blue-300 font-semibold text-lg" style="white-space:nowrap;">{{ heading }}</span>
-            </a>
-            <h6 class="text-sm text-gray-300 w-full text-center sm:w-auto sm:text-left">[Auto delete after 1 week]</h6>
-            <div class="flex flex-col sm:flex-row items-center w-full sm:w-auto space-y-2 sm:space-y-0 sm:space-x-4 mt-2 sm:mt-0">
+    <nav id="navbar" class="glassmorphism fixed top-0 left-0 right-0 z-50 w-full">
+        <div class="flex flex-col sm:flex-row justify-between items-stretch w-full px-3 sm:px-6 py-2 sm:py-3 gap-2 sm:gap-4">
+            <!-- Logo and Title -->
+            <div class="flex items-center justify-center sm:justify-start flex-shrink-0 gap-2">
+                <a href="/" class="text-lg sm:text-2xl font-bold flex items-center">
+                    <img src="{{ static_base_url }}/img/logo.jpeg" alt="MST Bin Logo" class="h-6 sm:h-8">
+                    <span class="hidden sm:inline ml-2">MST Bin</span>
+                    <span class="sm:hidden ml-2">MST</span>
+                </a>
+                <span class="ml-2 text-blue-300 font-semibold text-xs sm:text-lg whitespace-nowrap truncate max-w-xs" style="">{{ heading }}</span>
+            </div>
+
+            <!-- Subtitle (hidden on mobile) -->
+            <div class="hidden sm:flex items-center">
+                <h6 class="text-xs sm:text-sm text-gray-300">[Auto delete after 1 week]</h6>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center justify-end gap-3 flex-shrink-0">
                 <!-- Copy Button -->
                 <button id="copyContentBtn" title="Copy Content" class="text-white hover:text-blue-300 focus:outline-none flex justify-center">
-                    <!-- Clipboard Icon SVG -->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
                         <rect x="3" y="3" width="13" height="13" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
                     </svg>
                 </button>
-                <!-- Eye Icon and View Count -->
-                <span class="flex items-center text-gray-300 ml-2">
-                    <!-- Eye SVG -->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M1.458 12C2.732 7.943 6.523 5 12 5c5.477 0 9.268 2.943 10.542 7-1.274 4.057-5.065 7-10.542 7-5.477 0-9.268-2.943-10.542-7z"/>
+
+                <!-- View Count -->
+                <span class="flex items-center text-gray-300 text-xs sm:text-sm gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1.458 12C2.732 7.943 6.523 5 12 5c5.477 0 9.268 2.943 10.542 7-1.274 4.057-5.065 7-10.542 7-5.477 0-9.268-2.943-10.542-7z"/>
                         <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" fill="none"/>
                     </svg>
-                    <span id="viewCount" class="text-sm">{{ open_count }}</span>
+                    <span id="viewCount">{{ open_count }}</span>
                 </span>
-                <!-- Plus Icon -->
+
+                <!-- New Paste Button -->
                 <a href="/" title="New Paste" class="text-white hover:text-blue-300 flex justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
                 </a>
@@ -46,38 +55,29 @@
         </div>
     </nav>
 
-    <div class="container mx-auto px-4 sm:px-6 pt-24 flex-grow">
-        <div class="flex flex-col sm:flex-row w-full overflow-x-auto">
-            <div id="lineNumbers" class="pr-2 text-gray-500 select-none text-xs sm:text-base"></div>
-            <pre id="pasteContent" class="whitespace-pre-wrap flex-grow text-xs sm:text-base overflow-x-auto">{{ paste }}</pre>
+    <main id="mainContent" class="flex-grow w-full overflow-hidden">
+        <div class="flex h-full flex-col sm:flex-row w-full">
+            <div id="lineNumbers" class="pr-2 text-gray-500 select-none text-xs sm:text-base font-mono overflow-hidden flex-shrink-0"></div>
+            <pre id="pasteContent" class="flex-grow font-mono text-xs sm:text-base whitespace-pre-wrap word-break overflow-auto">{{ paste }}</pre>
         </div>
-    </div>
+    </main>
 
-    <footer class="glassmorphism mt-8 py-4 text-sm">
-        <div class="container mx-auto px-4 sm:px-6 text-center">
+    <footer class="glassmorphism py-2 sm:py-4 text-xs sm:text-sm w-full flex-shrink-0">
+        <div class="text-center w-full px-2 sm:px-6">
             <p>&copy; 2025 MST Services. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        // Function to copy paste content to clipboard
         function copyPasteContent() {
             const pasteContent = document.getElementById('pasteContent');
-            // Use innerText to preserve formatting
             const text = pasteContent.innerText;
-            navigator.clipboard.writeText(text).then(() => {
-                // Optional: show feedback
-                // alert('Content copied!');
-            }).catch(err => {
+            navigator.clipboard.writeText(text).catch(err => {
                 console.error('Failed to copy content: ', err);
             });
         }
 
-        // Copy content on page load
         document.addEventListener('DOMContentLoaded', () => {
-            copyPasteContent();
-
-            // Add line numbers
             const pasteContent = document.getElementById('pasteContent');
             const lineNumbers = document.getElementById('lineNumbers');
 
@@ -88,13 +88,22 @@
 
             updateLineNumbers();
 
-            // Sync scrolling
             pasteContent.addEventListener('scroll', () => {
                 lineNumbers.scrollTop = pasteContent.scrollTop;
             });
 
-            // Copy button event
             document.getElementById('copyContentBtn').addEventListener('click', copyPasteContent);
+
+            // Dynamically set main padding based on navbar height
+            function updateMainPadding() {
+                const navbar = document.getElementById('navbar');
+                const mainContent = document.getElementById('mainContent');
+                const navHeight = navbar.offsetHeight;
+                mainContent.style.paddingTop = navHeight + 'px';
+            }
+
+            updateMainPadding();
+            window.addEventListener('resize', updateMainPadding);
         });
     </script>
 </body>

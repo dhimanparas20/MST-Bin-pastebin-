@@ -9,27 +9,36 @@
     <link rel="icon" type="image/png" href="{{ static_base_url }}/img/favicon.ico">
 </head>
 <body class="bg-black text-white flex flex-col min-h-screen">
-    <nav class="glassmorphism fixed top-0 left-0 right-0 z-50">
-        <div class="container mx-auto px-4 sm:px-6 py-3 flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
-            <a href="/" class="text-2xl font-bold flex items-center w-full sm:w-auto justify-center sm:justify-start">
-                <img src="{{ static_base_url }}/img/logo.jpeg" alt="MST Bin Logo" class="h-8 mr-2">
-                MST Bin
-            </a>
-            <h6 class="text-sm text-gray-300 w-full text-center sm:w-auto sm:text-left">[Auto delete after 1 week]</h6>
-            <div class="flex flex-col sm:flex-row items-center w-full sm:w-auto space-y-2 sm:space-y-0 sm:space-x-4 mt-2 sm:mt-0">
+    <nav id="navbar" class="glassmorphism fixed top-0 left-0 right-0 z-50 w-full">
+        <div class="flex flex-col sm:flex-row justify-between items-stretch w-full px-3 sm:px-6 py-2 sm:py-3 gap-2 sm:gap-4">
+            <!-- Logo and Title -->
+            <div class="flex items-center justify-center sm:justify-start flex-shrink-0">
+                <a href="/" class="text-lg sm:text-2xl font-bold flex items-center">
+                    <img src="{{ static_base_url }}/img/logo.jpeg" alt="MST Bin Logo" class="h-6 sm:h-8 mr-2">
+                    <span class="hidden sm:inline">MST Bin</span>
+                    <span class="sm:hidden">MST</span>
+                </a>
+            </div>
+
+            <!-- Subtitle -->
+            <div class="hidden sm:flex items-center">
+                <h6 class="text-xs sm:text-sm text-gray-300">[Auto delete after 1 week]</h6>
+            </div>
+
+            <!-- Input and Buttons -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
                 <input
                     id="pasteHeading"
                     type="text"
                     maxlength="20"
                     placeholder="title: optional"
-                    class="bg-gray-800 text-white rounded px-2 py-1 w-full sm:w-48 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    style="font-size: 1rem;"
+                    class="bg-gray-800 text-white rounded px-2 py-1.5 text-xs sm:text-sm flex-grow sm:flex-grow-0 sm:w-40 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 >
-                <button id="saveBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-full sm:w-auto">
-                    Save (Ctrl + S)
+                <button id="saveBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1.5 px-3 rounded text-xs sm:text-sm whitespace-nowrap">
+                    Save (Ctrl+S)
                 </button>
-                <a href="/" title="New Paste" class="text-white hover:text-blue-300 flex justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <a href="/" title="New Paste" class="text-white hover:text-blue-300 flex justify-center items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
                 </a>
@@ -37,19 +46,32 @@
         </div>
     </nav>
 
-    <div class="container mx-auto px-4 sm:px-6 pt-24 flex-grow">
-        <div class="flex flex-col sm:flex-row w-full overflow-x-auto">
-            <div id="lineNumbers" class="pr-2 text-gray-500 select-none text-xs sm:text-base"></div>
-            <textarea id="pasteArea" class="w-full bg-black text-white resize-none outline-none text-xs sm:text-base" rows="20" wrap="off"></textarea>
+    <main id="mainContent" class="flex-grow w-full overflow-hidden">
+        <div class="flex h-full flex-col sm:flex-row w-full">
+            <div id="lineNumbers" class="pr-2 text-gray-500 select-none text-xs sm:text-base font-mono overflow-hidden flex-shrink-0"></div>
+            <textarea id="pasteArea" class="flex-grow bg-black text-white resize-none outline-none text-xs sm:text-base font-mono" wrap="off"></textarea>
         </div>
-    </div>
+    </main>
 
-    <footer class="glassmorphism mt-8 py-4 text-sm">
-        <div class="container mx-auto px-4 sm:px-6 text-center">
+    <footer class="glassmorphism py-2 sm:py-4 text-xs sm:text-sm w-full flex-shrink-0">
+        <div class="text-center w-full px-2 sm:px-6">
             <p>&copy; 2025 MST Services. All rights reserved.</p>
         </div>
     </footer>
 
     <script src="{{ static_base_url }}/js/script.js"></script>
+    <script>
+        // Dynamically set main padding based on navbar height
+        function updateMainPadding() {
+            const navbar = document.getElementById('navbar');
+            const mainContent = document.getElementById('mainContent');
+            const navHeight = navbar.offsetHeight;
+            mainContent.style.paddingTop = navHeight + 'px';
+        }
+
+        window.addEventListener('load', updateMainPadding);
+        window.addEventListener('resize', updateMainPadding);
+        document.addEventListener('DOMContentLoaded', updateMainPadding);
+    </script>
 </body>
 </html>
