@@ -31,6 +31,7 @@ def generate_key():
 class SavePaste(Resource):
     def post(self):
         data = request.json.get('data', '')
+        heading = request.json.get('heading', 'My Paste').strip() or 'My Paste'
         user_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
         if not data:
             return {'error': 'No data provided'}, 400
@@ -39,6 +40,7 @@ class SavePaste(Resource):
         paste = {
             'key': key,
             'data': data,
+            'heading': heading,
             'created_at': datetime.now(),
             'ip_address': user_ip,
             'open_count': 0
@@ -46,16 +48,16 @@ class SavePaste(Resource):
         pastes_collection.insert_one(paste)
         return {'url': f'{request.host_url}{key}'}, 201
 
+
 # Resource for retrieving pastes
 class GetPaste(Resource):
     def get(self, key):
         paste = pastes_collection.find_one({'key': key})
-        print(paste)
         if not paste:
             return {'error': 'Paste not found or Deleted'}, 404
-        # Increment the open_count value by one atomically
         pastes_collection.update_one({'key': key}, {'$inc': {'open_count': 1}})
-        return make_response(render_template('paste.html', paste=paste['data'],open_count=paste['open_count']))
+        heading = paste.get('heading', 'My Paste')
+        return make_response(render_template('paste.html', paste=paste['data'], open_count=paste['open_count'], heading=heading))
 
 
 # Resource for rendering the homepage

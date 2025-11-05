@@ -17,17 +17,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function savePaste() {
         const data = pasteArea.value;
+        const headingInput = document.getElementById('pasteHeading');
+        let heading = headingInput.value.trim();
         if (!data.trim()) {
             alert('Please enter some text before saving.');
             return;
         }
+        if (!heading) heading = "My Paste";
 
         fetch('/api/save', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ data }),
+            body: JSON.stringify({ data, heading }),
         })
         .then(response => response.json())
         .then(result => {
