@@ -1,17 +1,42 @@
-from flask import Flask, jsonify, request, render_template, make_response 
-from flask_restful import Api, Resource
-from pymongo import MongoClient
-from datetime import datetime, timedelta
+import os
 import random
 import string
-import os
+from datetime import datetime, timedelta
+
 from dotenv import load_dotenv
+from flask import Flask, request, render_template, make_response
+from flask_restful import Api, Resource
+from pymongo import MongoClient
 
 # Load environment variables
 load_dotenv()
 
-app = Flask(__name__)
+FLASK_ENV = os.getenv("FLASK_ENV", "dev")  # Default to "dev"
+STATIC_BASE_URL = os.getenv("STATIC_BASE_URL", "/")  # Default to local "/"
+
+# Configure Flask app
+if FLASK_ENV == "prod":
+    # In production, serve static files from S3
+    print("Running in PRODUCTION environment")
+    app = Flask(__name__, static_folder=None)  # Disable Flask's static file handling
+else:
+    print("Running in DEVELOPMENT environment")
+    # In development, serve static files from the "public" directory
+    app = Flask(__name__, static_folder="public", static_url_path="/")
+
+app.secret_key = os.getenv("SECRET_KEY", "super_secret_key")  # For session handling
 api = Api(app)
+
+# Inject STATIC_BASE_URL into templates
+@app.context_processor
+def inject_static_base_url():
+    if FLASK_ENV == "prod":
+        # Use S3 bucket URL in production
+        return {"static_base_url": STATIC_BASE_URL}
+    else:
+        # Dynamically determine the base domain for local development
+        base_url = f"{request.scheme}://{request.host}"  # e.g., http://localhost:5000
+        return {"static_base_url": base_url}
 
 # MongoDB Configuration
 MONGO_CONNECTION_STRING = os.getenv('MONGO_CONNECTION_STRING')

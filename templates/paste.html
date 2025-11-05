@@ -5,17 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MST Bin - Paste</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    <link rel="stylesheet" href="{{ static_base_url }}/css/styles.css">
+    <link rel="icon" type="image/png" href="{{ static_base_url }}/img/favicon.ico">
 </head>
 <body class="bg-black text-white flex flex-col min-h-screen">
     <nav class="glassmorphism fixed top-0 left-0 right-0 z-50">
         <div class="container mx-auto px-6 py-3 flex justify-between items-center">
             <a href="/" class="text-2xl font-bold flex items-center">
-                <img src="{{ url_for('static', filename='img/logo.jpeg') }}" alt="MST Bin Logo" class="h-8 mr-2">
+                <img src="{{ static_base_url }}/img/logo.jpeg" alt="MST Bin Logo" class="h-8 mr-2">
                 MST Bin
                 <span class="ml-4 text-blue-300 font-semibold text-lg" style="white-space:nowrap;">{{ heading }}</span>
             </a>
+            <h6>[Auto delete after 1 week]</h6>
             <div class="flex items-center space-x-4">
                 <!-- Copy Button -->
                 <button id="copyContentBtn" title="Copy Content" class="text-white hover:text-blue-300 focus:outline-none">

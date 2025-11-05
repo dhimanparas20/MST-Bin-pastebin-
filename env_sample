@@ -7,3 +7,7 @@ FLASK_DEBUG=False
 FLASK_PORT=5000
 FLASK_HOST=0.0.0.0
 
+SECRET_KEY= your_secret_key
+# prod or dev
+FLASK_ENV = prod
+STATIC_BASE_URL = https://<S3_BUCKET_NAME>.s3.ap-south-1.amazonaws.com
