@@ -1,12 +1,14 @@
 import os
 import random
 import string
-from datetime import datetime, timedelta
+from datetime import datetime, timezone, timedelta
 
+from apscheduler.schedulers.background import BackgroundScheduler
 from dotenv import load_dotenv
 from flask import Flask, request, render_template, make_response
 from flask_restful import Api, Resource
 from pymongo import MongoClient
+# from pytz import timezone
 
 # Load environment variables
 load_dotenv()
@@ -26,6 +28,7 @@ else:
 
 app.secret_key = os.getenv("SECRET_KEY", "super_secret_key")  # For session handling
 api = Api(app)
+scheduler = BackgroundScheduler()
 
 # Inject STATIC_BASE_URL into templates
 @app.context_processor
@@ -39,7 +42,7 @@ def inject_static_base_url():
         return {"static_base_url": base_url}
 
 # MongoDB Configuration
-MONGO_CONNECTION_STRING = os.getenv('MONGO_CONNECTION_STRING')
+MONGO_CONNECTION_STRING = os.getenv('MONGO_CONNECTION_STRING', 'mongodb://localhost:27017')
 if not MONGO_CONNECTION_STRING:
     raise ValueError("MONGO_CONNECTION_STRING is not set in the environment variables")
 
@@ -66,7 +69,7 @@ class SavePaste(Resource):
             'key': key,
             'data': data,
             'heading': heading,
-            'created_at': datetime.now(),
+            'created_at': datetime.now(timezone.utc),
             'ip_address': user_ip,
             'open_count': 0
         }
@@ -95,14 +98,17 @@ api.add_resource(SavePaste, '/api/save')
 api.add_resource(GetPaste, '/<string:key>')
 api.add_resource(Index, '/')
 
-# Background task to delete old pastes
-@app.before_request
-def delete_expired_pastes():
-    expiration_hours = int(os.getenv('EXPIRATION_HOURS', '24'))
-    expiration_time = datetime.now() - timedelta(hours=expiration_hours)
-    pastes_collection.delete_many({'created_at': {'$lt': expiration_time}})
+# Delete the pastes if they have less than 2 click and older than 7 days
+def delete_pastes():
+    print(f"Running delete_pastes at {datetime.now()}")
+    print(pastes_collection.delete_many({'open_count': {'$lt': 2}, 'created_at': {'$lt': datetime.now(timezone.utc) - timedelta(days=7)}}))
+
+
+# Set the scheduler to run after every 7 days
+scheduler.add_job(delete_pastes, 'interval', days=7)
 
 if __name__ == '__main__':
+    scheduler.start()
     app.run(
         debug=os.getenv('FLASK_DEBUG', 'False').lower() == 'true',
         port=int(os.getenv('FLASK_PORT', '5000')),
